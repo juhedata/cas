@@ -1,8 +1,8 @@
 {
   "name": "juhedata/cas",
-  "description": "Adds CAS support to Laravel 8.x",
+  "description": "Adds CAS support to Laravel 6.9、7.x、8.x",
   "keywords": [
-    "laravel 8"
+    "laravel support"
   ],
   "license": "MIT",
   "authors": [
@@ -13,7 +13,7 @@
   ],
   "require": {
     "php": ">=7.2.0",
-    "illuminate/support": "^8.0",
+    "illuminate/support": "^6.9|^7.0|^8.0",
     "subfission/cas": "^4.0",
     "laravel/sanctum": "^2.8"
   },
