@@ -1,0 +1,44 @@
+{
+  "name": "juhedata/cas",
+  "description": "Adds CAS support to Laravel 8.x",
+  "keywords": [
+    "laravel 8"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "juhedata",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.2.0",
+    "illuminate/support": "^8.0",
+    "subfission/cas": "^4.0",
+    "laravel/sanctum": "^2.8"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.0|^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "JuHeData\\CasLogin\\": "src/"
+    },
+    "files": [
+      "src/functions.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "JuHeData\\CasLogin\\Tests\\": "tests"
+    }
+  },
+  "minimum-stability": "stable",
+  "extra": {
+    "laravel": {
+      "providers": [
+        "JuHeData\\CasLogin\\CasLoginServiceProvider"
+      ]
+    }
+  }
+}
