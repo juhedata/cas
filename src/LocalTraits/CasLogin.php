@@ -142,7 +142,7 @@ class CasLogin
      */
     public static function casBindLogin()
     {
-        $_kuj = request()->input(configJuHe('pkey'));
+        $_kuj = request()->input(configJuHe('uCenterParamKey'));
         if ($_kuj && ($_token = getOriginCookie('_' . md5('_cAs' . $_kuj))) && ($authInfo = Encrypt::decryptUid($_token))) {
             if (substr($authInfo, 0, 10) < time()) {
                 return msgExport(1005);
