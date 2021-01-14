@@ -36,9 +36,12 @@ class CasLoginServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
 
+            $this->publishes([__DIR__ . '/../config/juheCas.php' => config_path('juheCas.php')]);
+
+            $timestamp = date('Y_m_d_His', time());
             $this->publishes([
-                __DIR__ . '/../config/juheCas.php' => config_path('juheCas.php'),
-            ], 'juheCas-config');
+                __DIR__ . '/../migrations/create_ext_users_table.php.stub' => database_path("/migrations/{$timestamp}_create_ext_users_table.php"),
+            ], 'migrations');
         }
         $this->registerRoutes();
     }

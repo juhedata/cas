@@ -1,0 +1,52 @@
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+class CreateExtUsersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up()
+    {
+        try {
+            Schema::create('users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('email')->unique();
+                $table->timestamp('email_verified_at')->nullable();
+                $table->string('password');
+                $table->tinyInteger('app_version')->default(1)->comment('应用版本：1：体验；2：专业；3：企业');
+                $table->tinyInteger('has_verify')->default(0)->comment('通过实名');
+                $table->tinyInteger('verify_type')->default(1)->comment('实名类型');
+                $table->tinyInteger('status')->default(1)->comment('状态');
+                $table->tinyInteger('vip')->default(0)->comment('是否会员');
+                $table->timestamp('reg_time')->nullable();
+                $table->rememberToken();
+                $table->timestamps();
+            });
+        } catch (Exception $e) {
+            try {
+                DB::statement(
+                    "ALTER TABLE `users` ADD `app_version` TINYINT(2) UNSIGNED NOT NULL DEFAULT '1' COMMENT '应用版本：1：体验；2：专业；3：企业' AFTER `remember_token`, " .
+                    "ADD `has_verify` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '通过实名' AFTER `app_version`, " .
+                    "ADD `verify_type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '实名类型' AFTER `has_verify`, " .
+                    "ADD `status` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '状态' AFTER `verify_type`, " .
+                    "ADD `vip` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否会员' AFTER `status`," .
+                    "ADD `reg_time` TIMESTAMP NULL  COMMENT '注册时间' AFTER `vip`;"
+                );
+
+            } catch (Exception $e) {
+            }
+        }
+
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+    }
+}
