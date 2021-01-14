@@ -21,4 +21,13 @@ return [
 
     // 同步登录url
     'syncLoginUrl' => env('CAS_SYNC_LOGIN_URL', false),
+
+    // timeout
+    'timeout' => env('CAS_LOGIN_ERROR_REFRESH_TIMEOUT', 5),
+
+    // redirect
+    'url' => env('CAS_LOGIN_ERROR_REFRESH_URL', null),
+
+    // login error message
+    'message' => '抱歉登录校验异常,请稍后再试'
 ];

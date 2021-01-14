@@ -42,6 +42,9 @@ class CasLoginServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../database/create_ext_users_table.php.stub' => database_path("/migrations/{$timestamp}_create_ext_users_table.php"),
             ], 'migrations');
+
+            $this->publishes([__DIR__ . '/views/cas_login_error.blade.php' => resource_path('views/errors/cas_login_error.blade.php')]);
+
         }
         $this->registerRoutes();
     }
