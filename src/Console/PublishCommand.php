@@ -33,6 +33,9 @@ class PublishCommand extends Command
         $this->comment('Publishing Sanctum Migrate...');
         $this->callSilent('migrate');
 
+        $this->comment('Publishing Cas Client Provider...');
+        $this->callSilent('vendor:publish', ['--provider' => 'Subfission\Cas\CasServiceProvider']);
+
         $this->comment('Publishing Juhe Cas Login Service Provider...');
         $this->callSilent('vendor:publish', ['--provider' => 'JuHeData\CasLogin\CasLoginServiceProvider']);
 
