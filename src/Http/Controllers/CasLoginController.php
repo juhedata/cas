@@ -19,8 +19,6 @@ class CasLoginController
         setLocalCookie('_re', $refer);
 
         switch ($mode) {
-            case 'juhe':
-                break;
             case 'casBind':
                 return CasLogin::casBindLogin();
                 break;
