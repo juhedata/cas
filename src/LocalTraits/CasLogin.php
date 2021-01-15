@@ -147,12 +147,13 @@ class CasLogin
         $_token = getOriginCookie('_' . md5('_cAs' . $_kuj));
         $authInfo = Encrypt::decryptUid($_token);
 
-
-        Log::info('Cas Bind Login', [
-            '_kuj' => $_kuj,
-            '_token' => $_token,
-            'authInfo' => $authInfo,
-        ]);
+        if (isDevelop()) {
+            Log::info('Cas Bind Login', [
+                '_kuj' => $_kuj,
+                '_token' => $_token,
+                'authInfo' => $authInfo,
+            ]);
+        }
 
         if ($_kuj && $_token && $authInfo) {
             if (substr($authInfo, 0, 10) < time()) {
