@@ -143,22 +143,18 @@ class CasLogin
      */
     public static function casBindLogin()
     {
-        $_kuj = request()->input(configJuHe('uCenterParamKey'));
+        if (!($_kuj = getOriginCookie(configJuHe('uCenterParamKey'), ''))) {
+            return msgExport([1005, '授权登录已过期或已超时']);
+        }
+
+        if (!($_token = getOriginCookie('_' . md5('_cAs' . $_kuj), ''))) {
+            return msgExport([1005, '登录鉴权已过期或已超时']);
+        }
+
         $_token = getOriginCookie('_' . md5('_cAs' . $_kuj));
         $authInfo = Encrypt::decryptUid($_token);
 
-        if (isDevelop()) {
-            Log::info('Cas Bind Login', [
-                '_kuj' => $_kuj,
-                '_token' => $_token,
-                'authInfo' => $authInfo,
-            ]);
-        }
-
-        if ($_kuj && $_token && $authInfo) {
-            if (substr($authInfo, 0, 10) < time()) {
-                return msgExport(1005);
-            }
+        if ($authInfo) {
             $authInfo = substr($authInfo, 10);
             if ($authUser = json_decode($authInfo, true)) {
                 static::loginSyncEvent($authUser);
