@@ -15,6 +15,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use JuHeData\CasLogin\Events\AuthLogin;
 use JuHeData\CasLogin\Services\Encrypt;
 
@@ -143,7 +144,17 @@ class CasLogin
     public static function casBindLogin()
     {
         $_kuj = request()->input(configJuHe('uCenterParamKey'));
-        if ($_kuj && ($_token = getOriginCookie('_' . md5('_cAs' . $_kuj))) && ($authInfo = Encrypt::decryptUid($_token))) {
+        $_token = getOriginCookie('_' . md5('_cAs' . $_kuj));
+        $authInfo = Encrypt::decryptUid($_token);
+
+
+        Log::info('Cas Bind Login', [
+            '_kuj' => $_kuj,
+            '_token' => $_token,
+            'authInfo' => $authInfo,
+        ]);
+
+        if ($_kuj && $_token && $authInfo) {
             if (substr($authInfo, 0, 10) < time()) {
                 return msgExport(1005);
             }

@@ -5,6 +5,7 @@ namespace JuHeData\CasLogin\Http\Middleware;
 use CAS_AuthenticationException;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use JuHeData\CasLogin\LocalTraits\UserCustom;
 use phpCAS;
 use Subfission\Cas\Middleware\CASAuth as BaseCasAuth;
 
@@ -32,7 +33,8 @@ class JuHeCasMiddleware extends BaseCasAuth
     public function handle($request, Closure $next)
     {
         try {
-            phpCAS::setLang('JuHeData\\CasLogin\\LocalTraits\\CAS_Languages_Lang');
+            phpCAS::setHTMLHeader(config('juheCas.header'));
+            phpCAS::setLang(UserCustom::getUserLang());
 
             if (!$this->cas->checkAuthentication()) {
                 if ($request->ajax() || $request->wantsJson()) {

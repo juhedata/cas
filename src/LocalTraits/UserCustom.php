@@ -20,6 +20,29 @@ class UserCustom
 {
     protected static $userModel = "JuHeData\CasLogin\Models\User";
 
+    // 自定义用户文件
+    protected static $userLang = 'JuHeData\\CasLogin\\LocalTraits\\CAS_Languages_Lang';
+
+    /**
+     * 获取用户错误语言包处理
+     *
+     * @return string
+     */
+    public static function getUserLang()
+    {
+        return static::$userLang;
+    }
+
+    /**
+     * 自定义用户错误语言包处理
+     *
+     * @param $lang
+     */
+    public static function setUserLang($lang)
+    {
+        static::$userLang = $lang;
+    }
+
     /**
      * 获取用户model
      *

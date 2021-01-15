@@ -29,5 +29,8 @@ return [
     'url' => env('CAS_LOGIN_ERROR_REFRESH_URL', null),
 
     // login error message
-    'message' => '抱歉登录校验异常,请稍后再试'
+    'message' => '抱歉登录校验异常,请稍后再试',
+
+    // 错误页面header
+    'header' => env('CAS_LOGIN_ERROR_HEADER', '<title>抱歉登录校验异常</title>'),
 ];
