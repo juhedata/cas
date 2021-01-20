@@ -87,7 +87,7 @@ class UserCustom
      * @param $authUser
      * @return bool|User
      */
-    protected static function addUer($userModel, $authUser)
+    protected static function addUser($userModel, $authUser)
     {
         $email = $authUser['uid'] . '@juhe.cn';
 
