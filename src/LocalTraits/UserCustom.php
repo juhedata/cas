@@ -95,12 +95,11 @@ class UserCustom
             $email = $authUser['email'];
         }
         // 初始创建用户信息
-        $user = (new $userModel)([
-            'name' => $authUser['uid'],
-            'email' => $email,
-            'reg_time' => $authUser['regtime'] ?: '',
-            'password' => password_hash($authUser['uid'], PASSWORD_BCRYPT)
-        ]);
+        $user = new $userModel;
+        $user->name = $authUser['uid'];
+        $user->email = $email;
+        $user->reg_time = $authUser['regtime'];
+        $user->password = password_hash($authUser['uid'], PASSWORD_BCRYPT);
 
         if ($user->save()) {
             return $user;
