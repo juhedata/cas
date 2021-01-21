@@ -10,6 +10,9 @@ return [
     // 联邦登录参数
     'uCenterParamKey' => env('CAS_UCENTER_LOGIN_PARAM_KEY', null),
 
+    // 联邦登录签名校验
+    'syncUrl' => env('CAS_UCENTER_SYNC_URL', null),
+
     // 前端分离亲前端地址
     'client' => env('APP_CLIENT_URL', null),
 
