@@ -145,11 +145,11 @@ class CasLogin
      */
     public static function casBindLogin()
     {
-        if (!($_kuj = request()->input(configJuHe('uCenterParamKey')))) {
+        if (!($_kuj = request()->input(config('juheCas.uCenterParamKey')))) {
             return msgExport([1005, '授权登录已过期或已超时']);
         }
 
-        $response = Http::get(configJuHe('syncUrl') . $_kuj);
+        $response = Http::get(config('juheCas.syncUrl') . $_kuj);
 
         if ($response->successful() && $response->json('code') === 0) {
             if ($authUser = $response->json('result')) {
