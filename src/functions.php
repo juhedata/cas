@@ -40,19 +40,6 @@ if (!function_exists('getOriginCookie')) {
     }
 }
 
-if (!function_exists('configJuHe')) {
-
-    /**
-     * @param $key
-     * @param string $def
-     * @return mixed
-     */
-    function configJuHe($key, $def = '')
-    {
-        return config('juheCas.' . $key, $def);
-    }
-}
-
 if (!function_exists('isDevelop')) {
 
     /**

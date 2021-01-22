@@ -101,7 +101,7 @@ class CasLogin
     protected static function syncLoginTime($uid)
     {
         //更新聚合平台登录时间
-        if ($url = configJuHe('syncLoginUrl')) {
+        if ($url = config('juheCas.syncLoginUrl')) {
             Http::timeout(3)->get($url . '/' . $uid);
         }
     }
@@ -124,7 +124,7 @@ class CasLogin
 
         $query = http_build_query(['login' => 'success', '_tk' => $token]);
 
-        $redirect = configJuHe('oauthResult');
+        $redirect = config('juheCas.oauthResult');
         // 测试环境兼容自定义前端域名进行登录开发
         if (isDevelop()) {
             if ($ref = getOriginCookie('_re')) {
@@ -140,6 +140,8 @@ class CasLogin
 
     /**
      * cas 同步bind登录：用户从聚合用户中心小应用点击过来直接登录
+     *
+     * @return mixed
      */
     public static function casBindLogin()
     {
@@ -150,9 +152,13 @@ class CasLogin
         $response = Http::get(configJuHe('syncUrl') . $_kuj);
 
         if ($response->successful() && $response->json('code') === 0) {
-            $authUser = $response->json('result');
-            static::loginSyncEvent($authUser);
-            return static::loginSuccess(true);
+            if ($authUser = $response->json('result')) {
+                // 用户信息解密
+                if ($authUser = json_decode(Encrypt::decryptUid($authUser), true)) {
+                    static::loginSyncEvent($authUser);
+                    return static::loginSuccess(true);
+                }
+            }
         }
 
         return msgExport(1005);

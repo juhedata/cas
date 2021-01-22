@@ -10,7 +10,7 @@ class Encrypt
      */
     public static function getKey()
     {
-        return configJuHe('apiKey');
+        return config('juheCas.apiKey');
     }
 
     /**
@@ -46,10 +46,10 @@ class Encrypt
      * @param $key
      * @return mixed
      */
-    public static function getUCenterKey($key)
+    public static function getOpenSSLKey($key)
     {
         if (!$key) {
-            $key = configJuHe('uCenterKey');
+            $key = config('juheCas.openSSLKey');
         }
         return $key;
     }
@@ -63,7 +63,7 @@ class Encrypt
      */
     public static function encryptUid($encrypt, $key = '')
     {
-        $key = static::getUCenterKey($key);
+        $key = static::getOpenSSLKey($key);
 
         if (mb_strlen($key) < 16) {
             $key = str_pad($key, 16, '0');
@@ -85,7 +85,7 @@ class Encrypt
      */
     public static function decryptUid($decrypt, $key = '')
     {
-        $key = static::getUCenterKey($key);
+        $key = static::getOpenSSLKey($key);
 
         if (mb_strlen($key) < 16) {
             $key = str_pad($key, 16, '0');

@@ -12,7 +12,7 @@ class CasLoginController
     public function casLogin(Request $request, $mode = '')
     {
         if (!($refer = $request->server('HTTP_REFERER'))) {
-            $refer = configJuHe('client');
+            $refer = config('juheCas.client');
         }
 
         // 记录登录跳转地址
