@@ -9,6 +9,13 @@ use \Illuminate\Routing\Redirector;
 
 class CasLoginController
 {
+    /**
+     * 聚合cas登录中心
+     *
+     * @param Request $request
+     * @param string $mode
+     * @return bool|mixed
+     */
     public function casLogin(Request $request, $mode = '')
     {
         if (!($refer = $request->server('HTTP_REFERER'))) {
@@ -40,18 +47,23 @@ class CasLoginController
     }
 
     /**
-     * cas登录
+     * 聚合cas登出
      *
      * @param Request $request
      */
     public function casLogout(Request $request)
     {
-        //测试环境兼容自定义前端域名进行登录开发
+        //测试环境兼容自定义前端域名进行登录开发：登出
         if (isDevelop()) {
-            if ($ref = $request->server('HTTP_REFERER')) {
-                preg_match('/^(http[s]?:\/\/[a-z\.\d\-]+)\/.*/', $ref, $match);
-                if (isset($match[1]) && $match[1]) {
-                    config(['cas.cas_logout_redirect' => $match[1]]);
+            if ($redirect = config('juheCas.logoutRedirect')) {
+                config(['cas.cas_logout_redirect' => $redirect]);
+            } else {
+                // 处理前端开发，退出跳转
+                if ($ref = $request->server('HTTP_REFERER')) {
+                    preg_match('/^(http[s]?:\/\/[a-z\.\d\-\:]+)/', $ref, $match);
+                    if (isset($match[1]) && $match[1]) {
+                        config(['cas.cas_logout_redirect' => $match[1]]);
+                    }
                 }
             }
         }

@@ -128,7 +128,8 @@ class CasLogin
         // 测试环境兼容自定义前端域名进行登录开发
         if (isDevelop()) {
             if ($ref = getOriginCookie('_re')) {
-                preg_match('/^(http[s]?:\/\/[a-z\.\d\-]+)\/.*/', $ref, $match);
+                // 匹配登录来源站点的host,调整登录校验，可以匹配前端本地开发调试的host
+                preg_match('/^(http[s]?:\/\/[a-z\.\d\-\:]+)/', $ref, $match);
                 if (isset($match[1]) && $match[1]) {
                     $redirect = $match[1] . '/oauth_result';
                 }
