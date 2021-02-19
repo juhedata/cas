@@ -31,13 +31,14 @@ class PublishCommand extends Command
         $this->callSilent('vendor:publish', ['--provider' => 'Laravel\Sanctum\SanctumServiceProvider']);
 
         $this->comment('Publishing Sanctum Migrate...');
-        $this->callSilent('migrate');
 
         $this->comment('Publishing Cas Client Provider...');
-        $this->callSilent('vendor:publish', ['--provider' => 'Subfission\Cas\CasServiceProvider']);
+        $this->callSilent('vendor:publish', ['--provider' => 'JuHeData\Cas\CasServiceProvider']);
 
         $this->comment('Publishing Juhe Cas Login Service Provider...');
         $this->callSilent('vendor:publish', ['--provider' => 'JuHeData\CasLogin\CasLoginServiceProvider']);
+
+        $this->callSilent('migrate');
 
     }
 }

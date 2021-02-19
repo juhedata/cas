@@ -73,8 +73,25 @@ class UserCustom
     {
         $userModel = static::getUserModel();
 
-        if (!($user = $userModel::where($userModel::getUserNameFiled(), $authUser['uid'])->first())) {
-            $user = static::addUser($userModel, $authUser);
+        // 查询用户信息
+        if (method_exists($userModel, 'getUserInfo')) {
+            $user = $userModel::getUserInfo($authUser);
+        } else {
+            if (method_exists($userModel, 'getUserNameFiled')) {
+                $username = $userModel::getUserNameFiled();
+            } else {
+                $username = 'name';
+            }
+            $user = $userModel::where($username, $authUser['uid'])->first();
+        }
+
+        if (!$user) {
+            // 用户新增
+            if (method_exists($userModel, 'getUserInfo')) {
+                $user = $userModel::userStore($authUser);
+            } else {
+                $user = static::addUser($userModel, $authUser);
+            }
         }
 
         return $user;
