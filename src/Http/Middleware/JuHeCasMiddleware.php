@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use JuHeData\CasLogin\LocalTraits\UserCustom;
 use phpCAS;
-use Subfission\Cas\Middleware\CASAuth as BaseCasAuth;
+use JuHeData\Cas\Middleware\CASAuth as BaseCasAuth;
 
 class JuHeCasMiddleware extends BaseCasAuth
 {
