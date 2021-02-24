@@ -11,6 +11,7 @@ return [
     'uCenterParamKey' => env('CAS_UCENTER_LOGIN_PARAM_KEY', '_kuj'),
 
     // 联邦登录签名校验
+    'syncDriver' => env('CAS_UCENTER_SYNC_DRIVER', 'api'),
     'syncUrl' => env('CAS_UCENTER_SYNC_URL', null),
 
     // 前端分离亲前端地址

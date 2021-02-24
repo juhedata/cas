@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use JuHeData\CasLogin\Events\AuthLogin;
 use JuHeData\CasLogin\Services\Encrypt;
 
@@ -150,18 +151,38 @@ class CasLogin
             return msgExport([1005, '授权登录已过期或已超时']);
         }
 
-        $response = Http::get(config('juheCas.syncUrl') . $_kuj);
-
-        if ($response->successful() && $response->json('code') === 0) {
-            if ($authUser = $response->json('result')) {
-                // 用户信息解密
-                if ($authUser = json_decode(Encrypt::decryptUid($authUser), true)) {
-                    static::loginSyncEvent($authUser);
-                    return static::loginSuccess(true);
-                }
+        $authUser = '';
+        // 新增redis校验驱动
+        if ((config('juheCas.syncDriver') == 'redis')) {
+            $redis = static::initRedis('cas_sync_login');
+            if ($authUser = $redis->get($_kuj)) {
+                $redis->del($_kuj);
+            }
+        } else {
+            $response = Http::get(config('juheCas.syncUrl') . $_kuj);
+            if ($response->successful() && $response->json('code') === 0) {
+                $authUser = $response->json('result');
+            }
+        }
+        if ($authUser) {
+            // 用户信息解密
+            if ($authUser = json_decode(Encrypt::decryptUid($authUser), true)) {
+                static::loginSyncEvent($authUser);
+                return static::loginSuccess(true);
             }
         }
 
         return msgExport(1005);
+    }
+
+    /**
+     * 连接redis
+     *
+     * @param $conn
+     * @return \Illuminate\Redis\Connections\Connection
+     */
+    protected static function initRedis($conn)
+    {
+        return Redis::connection($conn);
     }
 }
