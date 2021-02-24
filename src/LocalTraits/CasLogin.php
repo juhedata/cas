@@ -73,12 +73,15 @@ class CasLogin
      * 统一处理登录账号信息
      *
      * @param $authUser
+     * @param bool $sync 是否更新登录时间，默认更新；用户中心联邦登录不用更新
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    protected static function loginSyncEvent($authUser)
+    protected static function loginSyncEvent($authUser, $sync = true)
     {
-        // 同步聚合平台用户登录时间
-        static::syncLoginTime($authUser['uid']);
+        if ($sync) {
+            // 同步聚合平台用户登录时间
+            static::syncLoginTime($authUser['uid']);
+        }
 
         // 获取或存贮用户基本信息
         $user = UserCustom::getUserInfo($authUser);
@@ -167,7 +170,7 @@ class CasLogin
         if ($authUser) {
             // 用户信息解密
             if ($authUser = json_decode(Encrypt::decryptUid($authUser), true)) {
-                static::loginSyncEvent($authUser);
+                static::loginSyncEvent($authUser, false);
                 return static::loginSuccess(true);
             }
         }
