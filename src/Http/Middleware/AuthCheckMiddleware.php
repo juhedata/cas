@@ -41,8 +41,11 @@ class AuthCheckMiddleware
                 } else {
                     Auth::logout();
                 }
+            } else {
+                Auth::logout();
             }
         } catch (Exception $e) {
+            Auth::logout();
         }
 
         return $next($request);
