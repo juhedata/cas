@@ -86,10 +86,6 @@ class CasLogin
         // 获取或存贮用户基本信息
         $user = UserCustom::getUserInfo($authUser);
 
-        // 登录成功后存储用户登录信息
-        $_ckuj = Encrypt::encryptUid(json_encode($authUser, JSON_UNESCAPED_UNICODE));
-        setLocalCookie('_skuj', $_ckuj, 60 * 24 * 15);
-
         // auth登录
         Auth::login($user);
 
