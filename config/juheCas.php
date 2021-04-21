@@ -37,4 +37,6 @@ return [
 
     // 错误页面header
     'header' => env('CAS_LOGIN_ERROR_HEADER', '<title>抱歉登录校验异常</title>'),
+
+    'ticketRedis' => env('CAS_LOGIN_TICKET_REDIS', 'sessionStore')
 ];
