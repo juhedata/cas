@@ -146,10 +146,26 @@ class CasLogin
      */
     public static function casBindLogin()
     {
-        if (!($_kuj = request()->input(config('juheCas.uCenterParamKey')))) {
-            return msgExport([1005, '授权登录已过期或已超时']);
+        // 优化修改，添加tk登陆票据验证
+        if (!($_kuj = request()->input('_kuj')) && !($_tk = request()->input('_tk'))) {
+            return msgExport([1200, '授权登录已过期或已超时'], [$_kuj]);
         }
 
+        if ($_kuj) {
+            return static::_kujCasBind($_kuj);
+        }
+
+        return static::_tkSecret($_tk);
+    }
+
+    /**
+     * 处理用户中心联邦登录token获取
+     *
+     * @param $_kuj
+     * @return mixed
+     */
+    protected static function _kujCasBind($_kuj)
+    {
         $authUser = '';
         // 新增redis校验驱动
         if ((config('juheCas.syncDriver') == 'redis')) {
@@ -170,7 +186,22 @@ class CasLogin
                 return static::loginSuccess(true);
             }
         }
-        return msgExport(1005);
+        return msgExport(1005, ['_kuj' => $_kuj]);
+    }
+
+    /**
+     * 站点cas单点等后token 交换
+     *
+     * @param $_tk
+     * @return mixed
+     */
+    protected static function _tkSecret($_tk)
+    {
+        $redis = static::initRedis('cas_sync_login');
+        if ($token = $redis->get($_tk)) {
+            return msgExport(0, ['_tk' => $token]);
+        }
+        return msgExport(1005, ['_tk' => $_tk]);
     }
 
     /**

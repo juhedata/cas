@@ -7,9 +7,6 @@ return [
     // 聚合平应用中心同步登录加解密秘钥
     'openSSLKey' => env('APP_OPENSSL_KEY', '39e67df3f36d57a324b16aaf7eac32c9'),
 
-    // 联邦登录参数
-    'uCenterParamKey' => env('CAS_UCENTER_LOGIN_PARAM_KEY', '_kuj'),
-
     // 联邦登录签名校验
     'syncDriver' => env('CAS_UCENTER_SYNC_DRIVER', 'api'),
     'syncUrl' => env('CAS_UCENTER_SYNC_URL', null),
