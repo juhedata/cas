@@ -149,39 +149,27 @@ class CasLogin
         if (!($_kuj = request()->input(config('juheCas.uCenterParamKey')))) {
             return msgExport([1005, '授权登录已过期或已超时']);
         }
-        // 优化修改，添加tk登陆票据验证
-        if (!($_kuj = request()->input('_kuj')) && !($_tk = request()->input('_tk'))) {
-            return msgExport([1200, '授权登录已过期或已超时'], [$_kuj, $_tk]);
-        }
 
-        if ($_kuj) {
-            $authUser = '';
-            // 新增redis校验驱动
-            if ((config('juheCas.syncDriver') == 'redis')) {
-                $redis = static::initRedis('cas_sync_login');
-                if ($authUser = $redis->get($_kuj)) {
-                    $redis->del($_kuj);
-                }
-            } else {
-                $response = Http::get(config('juheCas.syncUrl') . $_kuj);
-                if ($response->successful() && $response->json('code') === 0) {
-                    $authUser = $response->json('result');
-                }
-            }
-            if ($authUser) {
-                // 用户信息解密
-                if ($authUser = json_decode(Encrypt::decryptUid($authUser), true)) {
-                    static::loginSyncEvent($authUser, false);
-                    return static::loginSuccess(true);
-                }
+        $authUser = '';
+        // 新增redis校验驱动
+        if ((config('juheCas.syncDriver') == 'redis')) {
+            $redis = static::initRedis('cas_sync_login');
+            if ($authUser = $redis->get($_kuj)) {
+                $redis->del($_kuj);
             }
         } else {
-            $redis = static::iniRedis(config('juheCas.ticketRedis', 'sessionStore'));
-            if ($token = static::redisGet($redis, $_tk)) {
-                return msgExport(0, ['_tk' => $token]);
+            $response = Http::get(config('juheCas.syncUrl') . $_kuj);
+            if ($response->successful() && $response->json('code') === 0) {
+                $authUser = $response->json('result');
             }
         }
-
+        if ($authUser) {
+            // 用户信息解密
+            if ($authUser = json_decode(Encrypt::decryptUid($authUser), true)) {
+                static::loginSyncEvent($authUser, false);
+                return static::loginSuccess(true);
+            }
+        }
         return msgExport(1005);
     }
 
