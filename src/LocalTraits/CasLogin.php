@@ -146,9 +146,6 @@ class CasLogin
      */
     public static function casBindLogin()
     {
-        if (!($_kuj = request()->input(config('juheCas.uCenterParamKey')))) {
-            return msgExport([1005, '授权登录已过期或已超时']);
-        }
         // 优化修改，添加tk登陆票据验证
         if (!($_kuj = request()->input('_kuj')) && !($_tk = request()->input('_tk'))) {
             return msgExport([1200, '授权登录已过期或已超时'], [$_kuj, $_tk]);
